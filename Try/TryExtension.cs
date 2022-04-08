@@ -69,6 +69,23 @@ public static class TryExtension
 
     public static TResult Execute<TResult>(this Try self, Func<TResult> action)
     {
-        return self.Execute
+        return self.Execute<TResult>(context => action.Invoke());
+    }
+
+    public static TResult Execute<TResult>(this Try self, Func<TryContext, TResult> action)
+    {
+        TResult? result = default(TResult);
+        self
+        .BeQuite(false)
+        .Execute(context => 
+        {
+            result = action.Invoke(context);
+        });
+        return result!;
+    }
+
+    public static TryContext Execute(this Try self, Action action)
+    {
+        return self.Execute(context => action.Invoke());
     }
 }

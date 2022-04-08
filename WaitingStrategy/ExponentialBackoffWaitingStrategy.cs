@@ -4,17 +4,19 @@ namespace Dotnetplayground.Try;
 
 public class ExponentialBackoffWaitingStrategy : IWaitingStrategy
 {
-    private int v1;
-    private int v2;
+    private int Timeout;
+    private int initialWaitMs;
 
-    public ExponentialBackoffWaitingStrategy(int v1, int v2)
+    public ExponentialBackoffWaitingStrategy(int ms, int initialWaitMs)
     {
-        this.v1 = v1;
-        this.v2 = v2;
+        this.Timeout = ms;
+        this.initialWaitMs = initialWaitMs;
     }
 
     public int ComputeDelay(TryContext context)
     {
-        throw new NotImplementedException();
+        var i = context.FailedCount;
+        if (i == 1) return initialWaitMs;
+        return i * i * Timeout;
     }
 }

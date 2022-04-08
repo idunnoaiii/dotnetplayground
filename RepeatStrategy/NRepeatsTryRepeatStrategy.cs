@@ -14,6 +14,6 @@ public class NRepeatsTryRepeatStrategy: IRepeatStrategy
 
     public bool ComputeRepeat(TryContext context)
     {
-        throw new NotImplementedException();
+        return context.FailedCount < N;
     }
 }
