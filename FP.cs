@@ -1,6 +1,5 @@
 namespace FP
 {
-
     using static F;
 
     public static partial class F
@@ -12,7 +11,9 @@ namespace FP
     public struct Option<T>
     {
         readonly bool isSome;
-        readonly T value;
+        
+        //public here to faciliate my Dump function
+        public readonly T value;
 
         private Option(T value)
         {
