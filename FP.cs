@@ -1,8 +1,7 @@
-/**
-Old way implement Option
-*/
-namespace Old.Functional
+namespace FP
 {
+
+    using static F;
 
     public static partial class F
     {
@@ -28,7 +27,7 @@ namespace Old.Functional
             new Option<T>(some.Value);
 
         public static implicit operator Option<T>(T value) =>
-            value == null ? F.None : F.Some(value);
+            value == null ? None : Some(value);
 
         public R Match<R>(Func<R> none, Func<T, R> some) =>
             isSome ? some(value) : none();
@@ -44,7 +43,6 @@ namespace Old.Functional
         public struct Some<T>
         {
             internal T Value { get; }
-
             internal Some(T value)
             {
                 if (value == null)
@@ -53,6 +51,5 @@ namespace Old.Functional
             }
         }
     }
-
 
 }
