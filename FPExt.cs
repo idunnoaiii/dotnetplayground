@@ -11,7 +11,6 @@ namespace FP
         public static Unit Unit() => default(Unit);
     }
 
-
     public static class Utils
     {
         public static Func<Unit> ToFunc(this Action action)
@@ -28,23 +27,27 @@ namespace FP
                return Unit();
            };
 
+        // Map (C<T>, T -> R) -> C<R>
         public static IEnumerable<R> Map<T, R>(this IEnumerable<T> ts, Func<T, R> fn)
         {
             foreach (var t in ts)
                 yield return fn(t);
         }
 
-
+        // Map (C<T>, T -> R) -> C<R>
         public static Option<R> Map<T, R>(this Option<T> opt, Func<T, R> fn)
             => opt.Match<Option<R>>
             (
                 () => None,
-                (t) => Some(fn(t))
+                (t) => fn(t)
             );
 
-
+        // ForEach for side effect
         public static IEnumerable<Unit> ForEach<T>(this IEnumerable<T> ts, Action<T> action)
             => ts.Map(action.ToFunc()).ToImmutableList();
+
+        public static Option<Unit> ForEach<T>(this Option<T> opt, Action<T> action)
+            => opt.Map(action.ToFunc());
     }
 
     //Sample code how to use Adapter function
