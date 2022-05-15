@@ -11,7 +11,7 @@ namespace FP
     public struct Option<T>
     {
         readonly bool isSome;
-        
+
         //public here to faciliate my Dump function
         public readonly T value;
 
@@ -32,6 +32,11 @@ namespace FP
 
         public R Match<R>(Func<R> none, Func<T, R> some) =>
             isSome ? some(value) : none();
+
+        public IEnumerable<T> AsEnumerable()
+        {
+            if (isSome) yield return value;
+        }
     }
 
     namespace Type
