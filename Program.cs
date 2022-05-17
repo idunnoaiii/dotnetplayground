@@ -6,38 +6,36 @@ using static FP.F;
 using Unit = System.ValueTuple;
 using static System.Console;
 
-using Pet = System.String;
+var TransferValidator = new TransferValidator<MakeTransfer>();
 
-var neighbors = new[]
+void MakeTransfer(MakeTransfer transfer)
+    => ((Option<MakeTransfer>) Some(transfer))
+        .Map(Normalize)
+        .Where(TransferValidator.IsValid)
+        .ForEach(Book);
+
+MakeTransfer(new MakeTransfer(10));
+
+
+MakeTransfer Normalize(MakeTransfer transfer) 
+    => transfer with { balance = 2};
+
+void Book(MakeTransfer transfer)
 {
- new { Name = "John", Pets = new Pet[] {"Fluffy", "Thor"} },
- new { Name = "Tim", Pets = new Pet[] {} },
- new { Name = "Carl", Pets = new Pet[] {"Sybil"} },
-};
-
-var nested = neighbors.Map(n => n.Pets);
-
-nested.Dump();
-var flat = neighbors.Bind(n => n.Pets);
-flat.Dump();
-
-/**
-Age ReadAge()
-    => ParseAge(Prompt("Please enter your age"))
-        .Match
-        (
-            () => ReadAge(),
-            (age) => age
-        );
-
-Option<Age> ParseAge(string input)
-    => ParseInt(input).Bind(Age.Of);
-
-string Prompt(string prompt)
-{
-    WriteLine(prompt);
-    return ReadLine();
+    transfer.balance.Dump();
 }
 
-ReadAge();
-*/
+interface IValidator<T> 
+{
+    bool IsValid(T t);
+}
+
+class TransferValidator<MakeTransfer> : IValidator<MakeTransfer>
+{
+    public bool IsValid(MakeTransfer t)
+    {
+        return false;
+    }
+}
+
+record MakeTransfer(int balance);
