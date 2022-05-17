@@ -53,7 +53,7 @@ public static class Utils
         (this Option<T> opt, Action<T> action)
         => opt.Map(action.ToFunc());
 
-
+    //(C<T>, T -> C<R>) -> C<R>
     public static Option<R> Bind<T, R>
         (this Option<T> optT, Func<T, Option<R>> fn)
         => optT.Match<Option<R>>
@@ -86,6 +86,13 @@ public static class Utils
     public static IEnumerable<R> Bind<T, R>
         (this Option<T> opt, Func<T, IEnumerable<R>> func)
         => opt.AsEnumerable().Bind(func);
+
+    //(C<T>, T -> R) -> C<R>
+    public static Option<R> MapB<T, R>(this Option<T> opt, Func<T, R> f)
+        => opt.Bind<T, R>(t => Some(f(t)));
+
+    public static IEnumerable<R> MapB<T, R>(this IEnumerable<T> ts, Func<T, R> f)
+        => ts.Bind(t => new List<R>(){f(t)});
 }
 
 
