@@ -92,7 +92,29 @@ public static class Utils
         => opt.Bind<T, R>(t => Some(f(t)));
 
     public static IEnumerable<R> MapB<T, R>(this IEnumerable<T> ts, Func<T, R> f)
-        => ts.Bind(t => new List<R>(){f(t)});
+        => ts.Bind(t => new List<R>() { f(t) });
+
+
+    public static Either<L, RR> Map<L, R, RR>(this Either<L, R> either, Func<R, RR> rf)
+        => either.Match<Either<L, RR>>
+        (
+            left: l => l,
+            right: r => rf(r)
+        );
+
+    public static Either<LL, RR> Map<L, LL, R, RR>(this Either<L, R> either, Func<L, LL> lf, Func<R, RR> rf)
+        => either.Match<Either<LL, RR>>
+        (
+            left: l => lf(l),
+            right: r => rf(r)
+        );
+
+    public static Func<T2, R> Apply<T1, T2, R>(this Func<T1, T2, R> f, T1 t1)
+        => t2 => f(t1, t2);
+
+    public static Func<T2, T3, R> Apply<T1, T2, T3, R>(this Func<T1, T2, T3, R> f, T1 t1)
+        => (t2, t3) => f(t1, t2, t3);
+
 }
 
 
